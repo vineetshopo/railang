@@ -5,11 +5,20 @@ class HeroesController < ApplicationController
   # GET /heroes.json
   def index
     @heroes = Hero.all
+    json = {'data' =>  Hero.all}.to_json
+    respond_to do |format|
+      format.html
+      format.json  { render :json => json } # don't do msg.to_json
+    end
   end
 
   # GET /heroes/1
   # GET /heroes/1.json
   def show
+    respond_to do |format|
+      format.html
+      format.json  { render :json => {"data" => @hero }.to_json } # don't do msg.to_json
+    end
   end
 
   # GET /heroes/new
@@ -28,10 +37,8 @@ class HeroesController < ApplicationController
 
     respond_to do |format|
       if @hero.save
-        format.html { redirect_to @hero, notice: 'Hero was successfully created.' }
-        format.json { render :show, status: :created, location: @hero }
+        format.json  { render :json => {"data" => @hero }.to_json } # don't do msg.to_json
       else
-        format.html { render :new }
         format.json { render json: @hero.errors, status: :unprocessable_entity }
       end
     end
